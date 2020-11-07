@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageHeader, Input } from 'antd';
-import ItemGrid from './itemgrid';
+import Itemlist from './itemlist';
 
 const { Search } = Input;
 
@@ -18,7 +18,7 @@ function Home(props) {
             title="We Sell Houses"
             subTitle="Welcome to the WeSellHouses."/>
         </div>  
-        <ItemGrid />
+        <Itemlist />
       </div>
     </>  
   );
