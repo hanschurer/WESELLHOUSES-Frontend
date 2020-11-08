@@ -1,7 +1,12 @@
 import React from "react";
 import { List, Avatar, Space } from "antd";
 
-//import {  MessageOutlined, LikeOutlined, StarOutlined  } from '@ant-design/icons'
+
+import {  MessageOutlined, LikeOutlined, StarOutlined  } from '@ant-design/icons'
+//import LikeOutlined from '@ant-design/icons/LikeOutlined';
+
+
+
 
 export default class Itemlist extends React.Component {
   constructor(props) {
@@ -65,6 +70,7 @@ export default class Itemlist extends React.Component {
             />
             {item.content}
           </List.Item>
+          
         )}
       />
     );
