@@ -18,11 +18,11 @@ export default class Itemlist extends React.Component {
     for (let i = 0; i < 23; i++) {
       listData.push({
         href: "https://ant.design",
-        title: `ant design part ${i}`,
+        title: `Houses ${i}`,
         avatar:
           "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
         description:
-          "Ant Design, a design language for background applications, is refined by Ant UED Team.",
+          "What a beautify houses! Buy now!",
         content:
           "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.",
       });
@@ -36,6 +36,7 @@ export default class Itemlist extends React.Component {
     );
     return (
       <List
+      style={{padding:"0 15%"}}
         itemLayout="vertical"
         size="large"
         pagination={{
@@ -45,11 +46,7 @@ export default class Itemlist extends React.Component {
           pageSize: 3,
         }}
         dataSource={listData}
-        footer={
-          <div>
-            <b>ant design</b> footer part
-          </div>
-        }
+
         renderItem={(item) => (
           <List.Item
             key={item.title}
@@ -59,12 +56,12 @@ export default class Itemlist extends React.Component {
               <img
                 width={272}
                 alt="logo"
-                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
+                src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=341754771,3770930808&fm=26&gp=0.jpg"
               />
             }
           >
             <List.Item.Meta
-              avatar={<Avatar src={item.avatar} />}
+          
               title={<a href={item.href}>{item.title}</a>}
               description={item.description}
             />
