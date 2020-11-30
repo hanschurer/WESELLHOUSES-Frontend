@@ -64,7 +64,7 @@ class App extends React.Component {
             </Switch>
           </Content>
 
-          <Footer style={{ textAlign: 'center' }}>Created for 304CEM</Footer>
+          <Footer style={{ textAlign: 'center' }}>Created By Han Wang 9987188</Footer>
 
         </Router>
       </UserContext.Provider>  

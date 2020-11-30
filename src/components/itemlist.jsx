@@ -2,7 +2,7 @@ import React from "react";
 import { List, Avatar, Space } from "antd";
 import {Link} from 'react-router-dom'
 
-import {  MessageOutlined, LikeOutlined, StarOutlined  } from '@ant-design/icons'
+import {  MessageOutlined, MoneyCollectOutlined, StarOutlined  } from '@ant-design/icons'
 //import LikeOutlined from '@ant-design/icons/LikeOutlined';
 
 
@@ -54,21 +54,26 @@ componentDidMount(){
         renderItem={(item) => (
           <List.Item
             key={item.title}
+            actions={[
+              <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+              <IconText icon={MoneyCollectOutlined} text={item.price} key="list-vertical-like-o" />,
+              <IconText icon={MessageOutlined} text="Chat Now" key="list-vertical-message" />,
+            ]}
             extra={
               <img
-                width={272}
+                width={350}
                 alt="logo"
-                src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=341754771,3770930808&fm=26&gp=0.jpg"
+                src={item.imageURL}
               />
             }
           >
             <List.Item.Meta
               
-              title={<a href={item.href}> {item.property_name} </a>}
+              title={<a href={item.href}> {item.title} </a>}
 
-              description={item.description}
+              description={item.location}
             />
-            {item.content}
+            {item.summary}
           </List.Item>
           
         )}

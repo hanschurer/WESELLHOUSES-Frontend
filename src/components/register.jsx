@@ -17,6 +17,19 @@ const emailRules = [
     {required: true, message: 'Please input your E-mail!' }
 ];
 
+const signupRules = [
+    { required: true, message: 'Please enter your set-up code!' },
+    ({getFieldValue})=>({
+        validator(rule,value){
+            if(value === 'we_sell_houses_agent'){
+                return Promise.resolve();
+            }
+            return Promise.reject('Plese enter the correct set-up code!')
+        }
+    })
+    
+];
+
 const passwordRules = [
     { required: true, message: 'Please input your password!' }
 ];
@@ -89,6 +102,10 @@ class RegistrationForm extends React.Component {
         </Form.Item>
 
         <Form.Item name="username" label="Username" rules={usernameRules} >
+            <Input />
+        </Form.Item>
+
+        <Form.Item name="signup" label="signup" rules={signupRules} >
             <Input />
         </Form.Item>
 
