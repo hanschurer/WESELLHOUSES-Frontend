@@ -59,7 +59,7 @@ class App extends React.Component {
               <Route path="/account" children={<Account />} />
               <Route path="/register" children={<Register />} />
               <Route path="/login" children={<Login />} />
-              <Route path="/item/:id" children={<Item />} />
+              <Route path="/items/:id" children={<Item />} />
               <Route path="/" children={<Home />} exact />
             </Switch>
           </Content>
