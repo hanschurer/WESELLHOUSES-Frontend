@@ -69,3 +69,32 @@
   font-size: 40px;
   line-height: 1;
 }
+.item-info {
+  width: 530px;
+  min-width: 530px;
+}
+.banner img {
+  width: 500px;
+  height: 300px;
+  display: block;
+  object-fit: cover;
+  margin: 0 auto;
+}
+.item-row-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 500px;
+  min-width: 500px;
+  padding-top: 20px;
+}
+.item-row-price div {
+  color: #ff552e;
+  font-weight: bold;
+  font-size: 28px;
+}
+.item-info-ctx {
+  width: 500px;
+  min-width: 500px;
+  margin: 0 auto;
+}

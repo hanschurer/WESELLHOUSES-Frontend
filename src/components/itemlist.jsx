@@ -1,6 +1,7 @@
 import React from 'react'
 import { PlusOutlined } from '@ant-design/icons'
 import axios from '../http'
+import { types } from '../util'
 import {
   PageHeader,
   Input,
@@ -16,14 +17,6 @@ import '../css/item.css'
 import { withRouter } from 'react-router-dom'
 const { Search } = Input
 
-const types = [
-  'Houses', //0
-  'Apartment', //1
-  'Flat', //2
-  'Garden', //3
-  'Swimming pool', //4
-  'Garage' //5
-]
 class Itemlist extends React.Component {
   constructor(props) {
     super(props)
@@ -135,20 +128,27 @@ class Itemlist extends React.Component {
         </div>
         {this.state.items.map(item => {
           return (
-            <div className="item">
+            <div className="item" key={item._id}>
               <div className="item-left">
                 <img src={'http://localhost:3030' + item.imgUrl[0]} />
               </div>
               <div className="item-body">
-                <div className="item-title">{item.name}</div>
+                <div
+                  className="item-title"
+                  onClick={() =>
+                    this.props.history.push(`/item?id=${item._id}`)
+                  }
+                >
+                  {item.name}
+                </div>
                 <div className="item-tags">
-                  {item.type.map(t => {
-                    return <Tag>{types[t]}</Tag>
+                  {item.type.map((t, index) => {
+                    return <Tag key={index}>{types[t]}</Tag>
                   })}
                 </div>
                 <div className="item-type">
-                  {item.tags.map(t => {
-                    return <span>{t}</span>
+                  {item.tags.map((t, index) => {
+                    return <span key={index}>{t}</span>
                   })}
                 </div>
                 <div className="item-desc">{item.desc}</div>
@@ -162,7 +162,13 @@ class Itemlist extends React.Component {
                 <Dropdown
                   overlay={
                     <Menu>
-                      <Menu.Item onClick={() => this.props.history.push(`/create/item?id=${item._id}`)}>Update</Menu.Item>
+                      <Menu.Item
+                        onClick={() =>
+                          this.props.history.push(`/create/item?id=${item._id}`)
+                        }
+                      >
+                        Update
+                      </Menu.Item>
                       <Menu.Item
                         danger
                         onClick={() => this.onItemUpdate(item._id)}
