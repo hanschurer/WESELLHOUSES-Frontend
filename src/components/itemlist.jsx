@@ -162,7 +162,7 @@ class Itemlist extends React.Component {
                 <Dropdown
                   overlay={
                     <Menu>
-                      <Menu.Item>Update</Menu.Item>
+                      <Menu.Item onClick={() => this.props.history.push(`/create/item?id=${item._id}`)}>Update</Menu.Item>
                       <Menu.Item
                         danger
                         onClick={() => this.onItemUpdate(item._id)}

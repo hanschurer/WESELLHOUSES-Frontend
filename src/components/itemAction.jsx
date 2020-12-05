@@ -12,7 +12,9 @@ import { PlusOutlined } from '@ant-design/icons'
 import '../css/itemAction.css'
 import axios from '../http'
 import { withRouter } from 'react-router-dom'
+import { getQueryString } from '../util'
 class ItemAction extends React.Component {
+  formRef = React.createRef()
   constructor(props) {
     super(props)
     this.state = {
@@ -25,14 +27,37 @@ class ItemAction extends React.Component {
       }
     }
   }
-  handleChange = ({ fileList, event, file }) => {
-    if (file.status === 'done') {
-      console.log(fileList)
-      this.state.forms.fileList = fileList
-      this.setState({
-        forms: { ...this.state.forms }
+  componentDidMount() {
+    if (getQueryString('id')) {
+      axios.get('/api/v1/item/' + getQueryString('id')).then(({ data }) => {
+        this.formRef.current.setFieldsValue({
+          ...data,
+          fileList: data.imgUrl.map((url, index) => ({
+            status: 'done',
+            uid: index,
+            url: 'http://localhost:3030' + url,
+            name: url
+          }))
+        })
+        this.setState({
+          forms: {
+            ...data,
+            fileList: data.imgUrl.map((url, index) => ({
+              status: 'done',
+              uid: index,
+              url: 'http://localhost:3030' + url,
+              name: url
+            }))
+          }
+        })
       })
     }
+  }
+  handleChange = ({ fileList, event, file }) => {
+    this.state.forms.fileList = fileList
+    this.setState({
+      forms: { ...this.state.forms }
+    })
   }
   onGroupChange = values => {
     this.state.forms.type = values
@@ -47,23 +72,43 @@ class ItemAction extends React.Component {
     })
   }
   onFinish = values => {
+    console.log(values)
     let fileList = values.fileList
     if (!(fileList instanceof Array)) {
       fileList = fileList.fileList
     }
-    axios({
-      url: '/api/v1/item',
-      method: 'post',
-      data: {
-        ...values,
-        imgUrl: fileList.map(item =>
-          item.response.path.replace('http://localhost:3030', '')
-        )
-      }
-    }).then(({ data }) => {
-      this.props.history.push('/')
-      message.success('Created successfully')
-    })
+    if (!getQueryString('id')) {
+      axios({
+        url: '/api/v1/item',
+        method: 'post',
+        data: {
+          ...values,
+          imgUrl: fileList.map(item =>
+            item.response.path.replace('http://localhost:3030', '')
+          )
+        }
+      }).then(({ data }) => {
+        this.props.history.push('/')
+        message.success('Created successfully')
+      })
+    } else {
+      axios({
+        url: '/api/v1/item/' + getQueryString('id'),
+        method: 'put',
+        data: {
+          ...values,
+          imgUrl: fileList.map(item =>
+            (item.url || item.response.path).replace(
+              'http://localhost:3030',
+              ''
+            )
+          )
+        }
+      }).then(({ data }) => {
+        this.props.history.push('/')
+        message.success('Update successfully')
+      })
+    }
   }
   render() {
     const formItemLayout = {
@@ -81,14 +126,22 @@ class ItemAction extends React.Component {
     )
     return (
       <div className="item-action-wrap">
-        <Form {...formItemLayout} onFinish={this.onFinish} scrollToFirstError>
+        <Form
+          ref={this.formRef}
+          {...formItemLayout}
+          onFinish={this.onFinish}
+          scrollToFirstError
+        >
           <Form.Item
             name="name"
             label="name"
             hasFeedback
             rules={[{ required: true, message: 'Please enter a name' }]}
           >
-            <Input placeholder="Please enter a name" />
+            <Input
+              value={this.state.forms.name}
+              placeholder="Please enter a name"
+            />
           </Form.Item>
           <Form.Item
             name="type"
@@ -114,7 +167,10 @@ class ItemAction extends React.Component {
             label="description"
             rules={[{ required: true, message: 'Please enter a description' }]}
           >
-            <Input.TextArea placeholder="Please enter a description"></Input.TextArea>
+            <Input.TextArea
+              value={this.state.forms.desc}
+              placeholder="Please enter a description"
+            ></Input.TextArea>
           </Form.Item>
 
           <Form.Item
@@ -141,7 +197,10 @@ class ItemAction extends React.Component {
             hasFeedback
             rules={[{ required: true, message: 'Please enter a position' }]}
           >
-            <Input placeholder="Please enter a position" />
+            <Input
+              value={this.state.forms.position}
+              placeholder="Please enter a position"
+            />
           </Form.Item>
           <Form.Item
             name="price"
@@ -151,6 +210,7 @@ class ItemAction extends React.Component {
           >
             <InputNumber
               style={{ width: '100%' }}
+              value={this.state.forms.price}
               min={0}
               precision={0}
               placeholder="Please enter a price"
