@@ -10,7 +10,7 @@ import Account from './components/account'
 import Item from './components/item'
 import Register from './components/register'
 import Login from './components/login'
-
+import ItemAction from './components/itemAction'
 const { Header, Content, Footer } = Layout
 
 class App extends React.Component {
@@ -31,6 +31,7 @@ class App extends React.Component {
             <Route path="/register" children={<Register />} />
             <Route path="/login" children={<Login />} />
             <Route path="/items/:id" children={<Item />} />
+            <Route path="/create/item" children={<ItemAction />} />
             <Route path="/" children={<Home />} exact />
           </Switch>
         </Content>

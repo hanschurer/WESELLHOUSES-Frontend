@@ -1,12 +1,9 @@
 import React from 'react'
-import { List, Space, Avatar, Modal, Carousel, Tag } from 'antd'
-import { Link } from 'react-router-dom'
-import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import axios from '../http'
-//import LikeOutlined from '@ant-design/icons/LikeOutlined';
-import Item from './item'
-import { PageHeader, Input, Checkbox } from 'antd'
+import { PageHeader, Input, Checkbox, Tag } from 'antd'
 import '../css/item.css'
+import { withRouter } from 'react-router-dom'
 const { Search } = Input
 
 const types = [
@@ -17,7 +14,7 @@ const types = [
   'Swimming pool', //4
   'Garage' //5
 ]
-export default class Itemlist extends React.Component {
+class Itemlist extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -48,16 +45,16 @@ export default class Itemlist extends React.Component {
       values
     })
   }
+  onAddClick = () => {
+    this.props.history.push('/create/item')
+  }
   render() {
-    const IconText = ({ icon, text }) => (
-      <Space>
-        {React.createElement(icon)}
-        {text}
-      </Space>
-    )
     return (
       <>
         <div style={{ padding: '2% 20%' }}>
+          <div className="add-btn" onClick={this.onAddClick}>
+            <PlusOutlined />
+          </div>
           <PageHeader
             className="site-page-header"
             title="We Sell Houses"
@@ -119,3 +116,4 @@ export default class Itemlist extends React.Component {
     )
   }
 }
+export default withRouter(Itemlist)
