@@ -1,153 +1,162 @@
-import React from 'react';
-import { withRouter } from 'react-router';
-import { Carousel } from 'antd';
-import { Row, Col, Button, Modal, Form, Input, Layout, InputNumber } from 'antd';
-import { status, json } from '../utilities/requestHandlers';
+import React from "react";
+import { withRouter } from "react-router";
+import { Carousel } from "antd";
+import {
+  Row,
+  Col,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Layout,
+  InputNumber,
+} from "antd";
+import { status, json } from "../utilities/requestHandlers";
 
 class Item extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            item: [],
-            visible: false,
-        }
-    }
-
-    componentDidMount() {
-
-        const id = this.props.match.params.id; // available using withRouter()
-        fetch(`http://localhost:3030/api/v1/items/${id}`)
-            .then(status)
-            .then(json)
-            .then(item => {
-                this.setState({ item: item })
-            })
-            .catch(err => {
-                console.log(`Fetch error for post ${id}`)
-            });
-    }
-
-    showModal = () => {
-        this.setState({ visible: true })
+  constructor(props) {
+    super(props);
+    this.state = {
+      item: [],
+      visible: false,
     };
+  }
 
-    handleOk = () => {
-        this.setState({ visible: false })
+  componentDidMount() {
+    const id = this.props.match.params.id; // available using withRouter()
+    fetch(`http://localhost:3030/api/v1/items/${id}`)
+      .then(status)
+      .then(json)
+      .then((item) => {
+        this.setState({ item: item });
+      })
+      .catch((err) => {
+        console.log(`Fetch error for post ${id}`);
+      });
+  }
 
-    };
+  showModal = () => {
+    this.setState({ visible: true });
+  };
 
-    handleCancel = () => {
-        this.setState({ visible: false })
-    };
-    onclick = () => {
-        this.showModal()
-    }
+  handleOk = () => {
+      
 
-    render() {
+    this.setState({ visible: false });
+  };
 
-        const item = this.state.item;
-        const contentStyle = {
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+  onclick = () => {
+    this.showModal();
+  };
 
-        };
-        const formItemLayout = {
-            labelCol: {
-                span: 10
-            },
-            wrapperCol: {
-                span: 14
-            },
-        };
+  onFinish = (values) => {
+    console.log('Received values of form: ', values);
+    const { confirm, ...data } = values;  // ignore the 'confirm' value in data sent
+    fetch('http://localhost:3030/api/v1/messages', {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json"
+        }        
+    })
+    .then(status)
+    .then(json)
+    .then(data => {
+        // TODO: display success message and/or redirect
+        console.log(data);
+        alert("Message has been send")
+    })
+    .catch(err => {
+        // TODO: show nicely formatted error message and clear form
+        alert("Error adding user");
+    });  
+  };
 
-        return (
-            <>
-                <Row>
-                    <Col span={16}>
+  render() {
+    const item = this.state.item;
+    const contentStyle = {};
+    const formItemLayout = {
+        labelCol: { xs: { span: 24 }, sm: { span: 6 } },
+        wrapperCol: { xs: { span: 24 }, sm: { span: 12 } }
+      };
+      const tailFormItemLayout = {
+        wrapperCol: { xs: { span: 24, offset: 0 }, sm: { span: 16, offset: 6 } },
+      };
+      
 
-                        <div>
-                            <h3 style={{ textAlign: 'center' }}> <img src={item.imageURL}></img>  </h3>
-                        </div>
-                    </Col>
-                    <Col span={8}>            <div>
-                        <h1>{item.title}</h1>
-                        <p>{item.location}</p>
-                        <p>Guide Price: {item.price}</p>
-                        <Button size={"large"} onClick={this.showModal}>Contact Agent</Button>
+    return (
+      <>
+        <Row>
+          <Col span={16}>
+            <div>
+              <h3 style={{ textAlign: "center" }}>
+                {" "}
+                <img src={item.imageURL}></img>{" "}
+              </h3>
+            </div>
+          </Col>
+          <Col span={8}>  
+            {" "}
+            <div>
+              <h1>{item.title}</h1>
+              <p>{item.location}</p>
+              <p>Guide Price: {item.price}</p>
+              <Button size={"large"} onClick={this.showModal}>
+                Contact Agent
+              </Button>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={14}>
+            <p style={({ textAlign: "center" }, { marginTop: "30px" })}>
+              {item.summary}
+            </p>
+          </Col>
+          <Col span={10}>
+            <p>Features: {item.features}</p>
+            <p>Category: {item.category}</p>
+            <p>Under offer: {item.underoffer}</p>
+            <p>High Priority: {item.highp}</p>
+          </Col>
+        </Row>
 
-                    </div></Col>
-                </Row>
-                <Row>
-                    <Col span={14}>
-                        <p style={{ textAlign: 'center' }, { marginTop: '30px' }}>{item.summary}</p>
-                    </Col>
-                    <Col span={10}>
-                        <p>Features: {item.features}</p>
-                        <p>Category: {item.category}</p>
-                        <p>Under offer: {item.underoffer}</p>
-                        <p>High Priority: {item.highp}</p>
-                    </Col>
-                </Row>
-
-                <Modal
-                    title="Leave a Message"
-                    visible={this.state.visible}
-                    onOk={this.handleOk}
-
-                    onCancel={this.handleCancel}
-                >
-                    <Form {...formItemLayout} style={{ marginLeft: -40 }}>
-                        <Form.Item
-                            name={['user', 'name']}
-                            label="Name"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name={['user', 'email']}
-                            label="Email"
-                            rules={[
-                                {
-                                    type: 'email',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name={['user', 'age']}
-                            label="Age"
-                            rules={[
-                                {
-                                    type: 'number',
-                                    min: 0,
-                                    max: 99,
-                                },
-                            ]}
-                        >
-                            <InputNumber />
-                        </Form.Item>
-                      
-                       
-                        <Form.Item name={['user', 'introduction']} label="Message">
-                            <Input.TextArea />
-                        </Form.Item>
-                        <Form.Item >
-                            <Button type="primary" htmlType="submit">
-                                Submit
-        </Button>
-                        </Form.Item>
-                    </Form>
-                </Modal>
-            </>
-
-        )
-    }
-
+        <Modal
+          title="Leave a Message"
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+        >
+        <Form {...formItemLayout} name="message" onFinish={this.onFinish} scrollToFirstError >
+        <Form.Item name="name" label="name" hasFeedback rules={[{required:true, message: 'Please input your password!'}] } >
+            <Input  placeholder="Please input your name"/>
+        </Form.Item>
+        <Form.Item name="email" label="E-mail" rules={[{type: 'email', message: 'The input is not valid E-mail!'},
+    {required: true, message: 'Please input your E-mail!' }]}>
+            <Input placeholder="Please input your name" />
+        </Form.Item>
+        <Form.Item name="tel" label="tel" rules={[{required:true}]} >
+            <Input placeholder="Please input your telphone number"/>
+        </Form.Item>
+        <Form.Item name="itemId" label="itemId" rules={[{required:true}]} >
+            <Input placeholder="Input porperty ID that you want to enquiry"/>
+        </Form.Item>
+        <Form.Item name="content" label="content" rules={[{required:true}]} >
+         <Input.TextArea placeholder="Leave a meesage here."></Input.TextArea>
+        </Form.Item>
+        <Form.Item {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit">
+                Send
+            </Button>
+        </Form.Item>
+      </Form>
+        </Modal>
+      </>
+    );
+  }
 }
 
 export default withRouter(Item);
-
