@@ -1,7 +1,17 @@
 import React from 'react'
 import { PlusOutlined } from '@ant-design/icons'
 import axios from '../http'
-import { PageHeader, Input, Checkbox, Tag } from 'antd'
+import {
+  PageHeader,
+  Input,
+  Checkbox,
+  Tag,
+  Divider,
+  Menu,
+  Dropdown,
+  Button,
+  message
+} from 'antd'
 import '../css/item.css'
 import { withRouter } from 'react-router-dom'
 const { Search } = Input
@@ -19,7 +29,8 @@ class Itemlist extends React.Component {
     super(props)
     this.state = {
       items: [],
-      values: []
+      values: [],
+      tags: []
     }
   }
 
@@ -34,7 +45,8 @@ class Itemlist extends React.Component {
       method: 'post',
       data: {
         type: this.state.values,
-        name: value
+        name: value,
+        tags: this.state.tags
       }
     }).then(({ data }) => {
       this.setState({ items: data })
@@ -45,8 +57,34 @@ class Itemlist extends React.Component {
       values
     })
   }
+  onGroupTagChange = tags => {
+    this.setState({
+      tags
+    })
+  }
   onAddClick = () => {
     this.props.history.push('/create/item')
+  }
+  onItemDel = _id => {
+    axios({
+      url: '/api/v1/item/' + _id,
+      method: 'delete'
+    }).then(({ data }) => {
+      message.success('Deletion succeeded')
+      this.onSearch('')
+    })
+  }
+  onItemUpdate = _id => {
+    axios({
+      url: '/api/v1/item/' + _id,
+      method: 'put',
+      data: {
+        status: 1
+      }
+    }).then(({ data }) => {
+      message.success('Cancellation succeeded')
+      this.onSearch('')
+    })
   }
   render() {
     return (
@@ -76,11 +114,22 @@ class Itemlist extends React.Component {
               <Checkbox value={0}>Houses</Checkbox>
               <Checkbox value={1}>Apartment</Checkbox>
               <Checkbox value={2}>Flat</Checkbox>
-            </div>
-            <div>
               <Checkbox value={3}>Garden</Checkbox>
               <Checkbox value={4}>Swimming pool</Checkbox>
               <Checkbox value={5}>Garage</Checkbox>
+            </div>
+          </Checkbox.Group>
+          <Divider />
+          <Checkbox.Group
+            value={this.state.tags}
+            onChange={this.onGroupTagChange}
+          >
+            <div style={{ padding: '2% 0 2% 0' }}>
+              <Checkbox value={'NICE'}>NICE</Checkbox>
+              <Checkbox value={'DEVELOPER'}>DEVELOPER</Checkbox>
+              <Checkbox value={'LOSER'}>LOSER</Checkbox>
+              <Checkbox value={'COOL'}>COOL</Checkbox>
+              <Checkbox value={'TEACHER'}>TEACHER</Checkbox>
             </div>
           </Checkbox.Group>
         </div>
@@ -108,7 +157,30 @@ class Itemlist extends React.Component {
                   {item.createUser && item.createUser.username} publish
                 </div>
               </div>
-              <div className="item-price">${item.price}</div>
+              <div className="item-price">
+                <p>${item.price}</p>
+                <Dropdown
+                  overlay={
+                    <Menu>
+                      <Menu.Item>Update</Menu.Item>
+                      <Menu.Item
+                        danger
+                        onClick={() => this.onItemUpdate(item._id)}
+                      >
+                        Cancellation
+                      </Menu.Item>
+                      <Menu.Item
+                        danger
+                        onClick={() => this.onItemDel(item._id)}
+                      >
+                        Delete
+                      </Menu.Item>
+                    </Menu>
+                  }
+                >
+                  <Button>Action</Button>
+                </Dropdown>
+              </div>
             </div>
           )
         })}
