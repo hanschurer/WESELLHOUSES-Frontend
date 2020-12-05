@@ -1,9 +1,10 @@
 import React from 'react'
 import { Form, Input, Button } from 'antd'
 import UserContext from '../contexts/user'
-import { Redirect } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
 import axios from '../http'
+import { connect } from 'react-redux'
+import { setUser } from '../store/actions'
 // add some layout to keep the form organised on different screen sizes
 const formItemLayout = {
   labelCol: { xs: { span: 24 }, sm: { span: 6 } },
@@ -25,6 +26,7 @@ const usernameRules = [
 /**
  * Login form component for app signup.
  */
+setUser({ a: 1 })
 class LoginForm extends React.Component {
   constructor(props) {
     super(props)
@@ -33,7 +35,7 @@ class LoginForm extends React.Component {
   state = { redirect: null }
 
   static contextType = UserContext
-
+  componentDidMount() {}
   login = values => {
     const { username, password } = values
     console.log(`logging in user: ${username}`)
@@ -44,13 +46,12 @@ class LoginForm extends React.Component {
         password
       }
     }).then(({ data }) => {
-      this.context.login(data)
-      window.location.href = '/'
+      this.props.setUser(data)
+      this.props.history.push('/')
     })
   }
 
   render() {
-    console.log(this.context)
     return (
       <Form
         style={{ margin: 40 }}
@@ -80,4 +81,11 @@ class LoginForm extends React.Component {
   }
 }
 
-export default withRouter(LoginForm)
+export default withRouter(
+  connect(
+    state => ({
+      user: state.user
+    }),
+    { setUser }
+  )(LoginForm)
+)

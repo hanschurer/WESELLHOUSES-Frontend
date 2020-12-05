@@ -1,13 +1,16 @@
 import axios from 'axios'
 import { message } from 'antd'
+import store from './store/store'
 let instance = axios.create({
-  baseURL: 'http://localhost:3030'
+  baseURL: 'http://localhost:3030',
+  withCredentials: true
 })
 instance.interceptors.request.use(
   config => {
-    const token = sessionStorage.getItem('token')
+    const token = store.getState().user.token
     if (token) {
-      config.headers.token = token
+      config.headers = config.headers || {}
+      config.headers.authorization = token
     }
     return config
   },
@@ -17,18 +20,16 @@ instance.interceptors.request.use(
 )
 instance.interceptors.response.use(
   response => {
-    console.log(response)
-    if (response.status < 300) {
-      return response
-    } else {
-      switch (response.status) {
-        case 401:
-          console.log(response.data)
-      }
-    }
     return response
   },
   error => {
+    if (error.response.status == 401) {
+      store.dispatch({
+        type: 'USER',
+        data: {}
+      })
+      window.location.href = '/login'
+    }
     if (error.response && error.response.data && error.response.data.message) {
       message.error(error.response.data.message)
     } else {

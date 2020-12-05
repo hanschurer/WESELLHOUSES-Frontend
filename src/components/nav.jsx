@@ -1,10 +1,9 @@
 import React from 'react'
-import { useContext } from 'react'
 import { Menu } from 'antd'
 import { Link } from 'react-router-dom'
-import UserContext from '../contexts/user'
-function Nav() {
-  const context = useContext(UserContext)
+import { connect } from 'react-redux'
+import { setUser } from '../store/actions'
+function Nav(props) {
   let LoginNav
   const keys = ['register', 'login', 'account', 'logout']
   let selectedKeys = []
@@ -16,7 +15,7 @@ function Nav() {
   if (!selectedKeys.length) {
     selectedKeys = ['home']
   }
-  if (!context.user.token) {
+  if (!props.user.token) {
     LoginNav = (
       <>
         <Menu.Item key="register">
@@ -33,7 +32,12 @@ function Nav() {
         <Menu.Item key="account">
           <Link to="/account">Account</Link>
         </Menu.Item>
-        <Menu.Item key="logout" onClick={context.logout}>
+        <Menu.Item
+          key="logout"
+          onClick={() => {
+            this.props.setUser({})
+          }}
+        >
           Logout
         </Menu.Item>
       </>
@@ -56,4 +60,9 @@ function Nav() {
   )
 }
 
-export default Nav
+export default connect(
+  state => ({
+    user: state.user
+  }),
+  { setUser }
+)(Nav)

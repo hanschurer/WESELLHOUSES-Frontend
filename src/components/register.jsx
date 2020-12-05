@@ -53,12 +53,11 @@ class RegistrationForm extends React.Component {
       url: `/api/v1/users`,
       method: 'post',
       data
+    }).then(({ data }) => {
+      window.localStorage.setItem('user', JSON.stringify(data))
+      message.success('User added')
+      window.location.href = '/login'
     })
-      .then(({ data }) => {
-        window.localStorage.setItem('user', JSON.stringify(data))
-        message.success('User added')
-        window.location.href = '/login'
-      })
   }
 
   render() {
