@@ -1,9 +1,8 @@
 import React from 'react'
 import { Layout, Menu } from 'antd'
-import { LaptopOutlined, NotificationOutlined } from '@ant-design/icons'
+import { NotificationOutlined } from '@ant-design/icons'
 import ItemTable from './itemTable'
-const { SubMenu } = Menu
-const { Header, Content, Sider } = Layout
+const { Content, Sider } = Layout
 
 export default class Account extends React.Component {
   constructor(props) {
@@ -24,8 +23,7 @@ export default class Account extends React.Component {
         <Sider width={200} className="site-layout-background">
           <Menu
             mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            defaultSelectedKeys={['schat']}
             style={{ height: '100%', borderRight: 0 }}
           >
             <Menu.Item
@@ -35,9 +33,9 @@ export default class Account extends React.Component {
             >
               Messages
             </Menu.Item>
-            <Menu.Item key="items" icon={<LaptopOutlined />}>
+            {/* <Menu.Item key="items" icon={<LaptopOutlined />}>
               Items
-            </Menu.Item>
+            </Menu.Item> */}
           </Menu>
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>

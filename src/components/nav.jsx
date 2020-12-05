@@ -1,41 +1,56 @@
 import React from 'react'
-import { Menu } from 'antd'
-import { Link } from 'react-router-dom'
+import { Menu, Avatar, message } from 'antd'
 import { connect } from 'react-redux'
 import { setUser } from '../store/actions'
+import { useHistory } from 'react-router-dom'
 function Nav(props) {
+  let history = useHistory()
   let LoginNav
-  const keys = ['register', 'login', 'account', 'logout']
-  let selectedKeys = []
-  keys.map(key => {
-    if (window.location.href.indexOf(key) !== -1) {
-      selectedKeys.push(key)
-    }
-  })
-  if (!selectedKeys.length) {
-    selectedKeys = ['home']
+  let selectedKeys = props.selectedKeys
+  const isLogin = (path, flag = true) => {
+    if (flag && !props.user.token) return message.info('Please log in')
+    history.push(path)
   }
+  const setActiveMenu = () => {
+    let newselectedKeys = []
+    let routes = ['register', 'login', 'account']
+    routes.map(key => {
+      if (window.location.pathname.indexOf(key) !== -1) {
+        newselectedKeys = [key]
+      }
+    })
+    if (newselectedKeys.length === 0) {
+      newselectedKeys = ['home']
+    }
+    if (newselectedKeys[0] !== selectedKeys[0]) {
+      props.change(newselectedKeys)
+    }
+  }
+  setActiveMenu()
+  history.listen(setActiveMenu)
+
   if (!props.user.token) {
     LoginNav = (
       <>
-        <Menu.Item key="register">
-          <Link to="/register">Register</Link>
+        <Menu.Item key="register" onClick={() => isLogin('/register', false)}>
+          Register
         </Menu.Item>
-        <Menu.Item key="login">
-          <Link to="/login">Login</Link>
+        <Menu.Item key="login" onClick={() => isLogin('/login', false)}>
+          Login
         </Menu.Item>
       </>
     )
   } else {
     LoginNav = (
       <>
-        <Menu.Item key="account">
-          <Link to="/account">Account</Link>
+        <Menu.Item key="account" onClick={() => isLogin('/account')}>
+          Account
         </Menu.Item>
         <Menu.Item
           key="logout"
           onClick={() => {
-            this.props.setUser({})
+            props.setUser({})
+            history.push('/login')
           }}
         >
           Logout
@@ -46,15 +61,21 @@ function Nav(props) {
   return (
     <>
       <Menu
-        defaultSelectedKeys={selectedKeys}
+        selectedKeys={selectedKeys}
         theme="dark"
         mode="horizontal"
         style={{ textAlign: 'right' }}
       >
-        <Menu.Item key="home">
-          <Link to="/">Home</Link>
+        <Menu.Item key="home" onClick={() => isLogin('/')}>
+          Home
         </Menu.Item>
         {LoginNav}
+        {props.user.token ? (
+          <span style={{ margin: '0 15px' }}>{props.user.username}</span>
+        ) : null}
+        {props.user.token ? (
+          <Avatar src={'http://localhost:3030' + props.user.avatarURL} />
+        ) : null}
       </Menu>
     </>
   )

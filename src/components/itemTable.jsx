@@ -1,114 +1,103 @@
 import React from 'react'
-import { Table, Tag, Space } from 'antd'
-
+import { Table, Tooltip, Avatar, Button, message } from 'antd'
+import axios from '../http'
+import moment from 'moment'
 export default class itemTable extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      items: []
+      msgs: []
     }
   }
 
   componentDidMount() {
-    fetch('http://localhost:3030/api/v1/items')
-      .then(res => {
-        return res.json()
-      })
-      .then(data => {
-        this.setState({ items: data })
-      })
-      .catch(err => console.log('error fetching articles'))
+    this.searchMsgs()
   }
-
-  render() {
-    const data = [
-      {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer']
-      },
-      {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser']
-      },
-      {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher']
+  searchMsgs = () => {
+    axios('/api/v1/msgs').then(({ data }) => {
+      this.setState({ msgs: data })
+    })
+  }
+  onCancellation = _id => {
+    axios({
+      url: '/api/v1/msg/' + _id,
+      method: 'put',
+      data: {
+        status: 1
       }
-    ]
+    }).then(({ data }) => {
+      message.success('Cancellation succeeded')
+      this.searchMsgs()
+    })
+  }
+  onDel = _id => {
+    axios({
+      url: '/api/v1/msg/' + _id,
+      method: 'delete'
+    }).then(({ data }) => {
+      message.success('Deletion succeeded')
+      this.searchMsgs()
+    })
+  }
+  render() {
     const columns = [
       {
-        title: 'ID',
-        dataIndex: 'age',
-        key: 'age'
+        title: 'img',
+        key: 'img',
+        align: 'center',
+        render: row => (
+          <Avatar
+            src={`http://localhost:3030${row.createUser &&
+              row.createUser.avatarURL}`}
+          />
+        )
       },
       {
-        title: 'Property Title',
-        dataIndex: 'name',
-        key: 'name',
-        render: text => <a>{text}</a>
-      },
-
-      {
-        title: 'Location',
-        dataIndex: 'address',
-        key: 'address'
+        title: 'username',
+        key: 'username',
+        align: 'center',
+        render: row => <span>{row.createUser && row.createUser.username}</span>
       },
       {
-        title: 'Under Offer',
-        dataIndex: 'address',
-        key: 'address'
+        title: 'content',
+        dataIndex: 'content',
+        align: 'center',
+        key: 'content',
+        render: text => (
+          <Tooltip title={text}>
+            {text.length > 10 ? text.subtring(0, 10) + '...' : text}
+          </Tooltip>
+        )
       },
       {
-        title: 'Archived',
-        dataIndex: 'address',
-        key: 'address'
-      },
-      {
-        title: 'High Priority',
-        dataIndex: 'address',
-        key: 'address'
-      },
-      {
-        title: 'Tags',
-        key: 'tags',
-        dataIndex: 'tags',
-
-        render: tags => (
-          <>
-            {tags.map(tag => {
-              let color = tag.length > 5 ? 'geekblue' : 'green'
-              if (tag === 'loser') {
-                color = 'volcano'
-              }
-              return (
-                <Tag color={color} key={tag}>
-                  {tag.toUpperCase()}
-                </Tag>
-              )
-            })}
-          </>
+        title: 'createdAt',
+        dataIndex: 'createdAt',
+        key: 'createdAt',
+        align: 'center',
+        render: text => (
+          <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
         )
       },
       {
         title: 'Action',
         key: 'action',
+        align: 'center',
         render: (text, record) => (
-          <Space size="middle">
-            <a>Modify</a>
-          </Space>
+          <div>
+            <Button
+              type="link"
+              onClick={() => this.onCancellation(record._id)}
+              style={{ marginRight: '10px' }}
+            >
+              Cancellation
+            </Button>
+            <Button type="link" onClick={() => this.onDel(record._id)}>
+              Delete
+            </Button>
+          </div>
         )
       }
     ]
-
-    return <Table columns={columns} dataSource={data} />
+    return <Table columns={columns} rowKey="_id" dataSource={this.state.msgs} />
   }
 }

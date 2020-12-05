@@ -12,17 +12,21 @@ import Register from './components/register'
 import Login from './components/login'
 import ItemAction from './components/itemAction'
 const { Header, Content, Footer } = Layout
-
 class App extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      selectedKeys: []
+    }
   }
-
+  change = selectedKeys => {
+    this.setState({ selectedKeys })
+  }
   render() {
     return (
       <Router>
         <Header>
-          <Nav />
+          <Nav selectedKeys={this.state.selectedKeys} change={this.change} />
         </Header>
 
         <Content>

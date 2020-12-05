@@ -1,7 +1,8 @@
 import React from 'react'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button, message, Upload } from 'antd'
 import axios from '../http'
 import { withRouter } from 'react-router-dom'
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 // add some layout to keep the form organised on different screen sizes
 const formItemLayout = {
   labelCol: { xs: { span: 24 }, sm: { span: 6 } },
@@ -38,29 +39,75 @@ const usernameRules = [
   { required: true, message: 'Please input your username!', whitespace: true }
 ]
 
+function getBase64(img, callback) {
+  const reader = new FileReader()
+  reader.addEventListener('load', () => callback(reader.result))
+  reader.readAsDataURL(img)
+}
+
+function beforeUpload(file) {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
+  if (!isJpgOrPng) {
+    message.error('You can only upload JPG/PNG file!')
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2
+  if (!isLt2M) {
+    message.error('Image must smaller than 2MB!')
+  }
+  return isJpgOrPng && isLt2M
+}
 /**
  * Registration form component for app signup.
  */
 class RegistrationForm extends React.Component {
   constructor() {
     super()
+    this.state = {
+      imageUrl: '',
+      loading: false
+    }
   }
-
+  handleChange = info => {
+    if (info.file.status === 'uploading') {
+      this.setState({ loading: true })
+      return
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, imageUrl =>
+        this.setState({
+          imageUrl,
+          loading: false
+        })
+      )
+    }
+  }
   onFinish = values => {
     console.log('Received values of form: ', values)
     const { confirm, ...data } = values // ignore the 'confirm' value in data sent
     axios({
       url: `/api/v1/users`,
       method: 'post',
-      data
+      data: {
+        ...data,
+        avatarURL: values.imageUrl.file.response.path,
+        imageUrl: undefined
+      }
     }).then(({ data }) => {
       window.localStorage.setItem('user', JSON.stringify(data))
       message.success('User added')
-      window.location.href = '/login'
+      this.props.history.push('/login')
     })
   }
 
   render() {
+    const { loading, imageUrl } = this.state
+    const uploadButton = (
+      <div>
+        {loading ? <LoadingOutlined /> : <PlusOutlined />}
+        <div style={{ marginTop: 8 }}>Upload</div>
+      </div>
+    )
     return (
       <Form
         style={{ margin: 40 }}
@@ -69,6 +116,28 @@ class RegistrationForm extends React.Component {
         onFinish={this.onFinish}
         scrollToFirstError
       >
+        <Form.Item
+          name="imageUrl"
+          label="imageUrl"
+          rules={[{ required: true, message: 'Please upload your avatarURL!' }]}
+        >
+          <Upload
+            name="file"
+            listType="picture-card"
+            className="avatar-uploader"
+            showUploadList={false}
+            action="http://localhost:3030/api/v1/file"
+            beforeUpload={beforeUpload}
+            onChange={this.handleChange}
+            withCredentials={true}
+          >
+            {imageUrl ? (
+              <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
+            ) : (
+              uploadButton
+            )}
+          </Upload>
+        </Form.Item>
         <Form.Item name="email" label="E-mail" rules={emailRules}>
           <Input />
         </Form.Item>

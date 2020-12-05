@@ -10,7 +10,6 @@ import {
   Divider,
   Comment,
   Tooltip,
-  Avatar,
   Form,
   Input
 } from 'antd'
@@ -18,7 +17,7 @@ import '../css/item.css'
 import { withRouter } from 'react-router-dom'
 import { getQueryString, types } from '../util'
 import moment from 'moment'
-
+import { connect } from 'react-redux'
 const { TextArea } = Input
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
   <>
@@ -47,7 +46,8 @@ class ItemInfo extends React.Component {
       item: {
         imgUrl: [],
         tags: [],
-        type: []
+        type: [],
+        createUser: {}
       }
     }
   }
@@ -140,6 +140,11 @@ class ItemInfo extends React.Component {
     })
     this.addMsg()
   }
+  isAction(createUserId) {
+    return (
+      this.props.user.role === 'admin' || this.props.user._id === createUserId
+    )
+  }
   render() {
     const item = this.state.item
     return (
@@ -155,27 +160,29 @@ class ItemInfo extends React.Component {
         </Carousel>
         <div className="item item-row-price">
           <div>${item.price}</div>
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item
-                  onClick={() =>
-                    this.props.history.push(`/create/item?id=${item._id}`)
-                  }
-                >
-                  Update
-                </Menu.Item>
-                <Menu.Item danger onClick={() => this.onItemUpdate(item._id)}>
-                  Cancellation
-                </Menu.Item>
-                <Menu.Item danger onClick={() => this.onItemDel(item._id)}>
-                  Delete
-                </Menu.Item>
-              </Menu>
-            }
-          >
-            <Button>Action</Button>
-          </Dropdown>
+          {this.isAction(item.createUser._id) ? (
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item
+                    onClick={() =>
+                      this.props.history.push(`/create/item?id=${item._id}`)
+                    }
+                  >
+                    Update
+                  </Menu.Item>
+                  <Menu.Item danger onClick={() => this.onItemUpdate(item._id)}>
+                    Cancellation
+                  </Menu.Item>
+                  <Menu.Item danger onClick={() => this.onItemDel(item._id)}>
+                    Delete
+                  </Menu.Item>
+                </Menu>
+              }
+            >
+              <Button>Action</Button>
+            </Dropdown>
+          ) : null}
         </div>
         <div className="item item-info">
           <div className="item-body">
@@ -218,16 +225,20 @@ class ItemInfo extends React.Component {
               <Comment
                 key={msg._id}
                 actions={[
-                  <Button
-                    type="link"
-                    onClick={() => this.onCancellation(msg._id)}
-                    style={{ marginRight: '10px' }}
-                  >
-                    Cancellation
-                  </Button>,
-                  <Button type="link" onClick={() => this.onDel(msg._id)}>
-                    Delete
-                  </Button>
+                  this.isAction(msg.createUser._id) ? (
+                    <Button
+                      type="link"
+                      onClick={() => this.onCancellation(msg._id)}
+                      style={{ marginRight: '10px' }}
+                    >
+                      Cancellation
+                    </Button>
+                  ) : null,
+                  this.isAction(msg.createUser._id) ? (
+                    <Button type="link" onClick={() => this.onDel(msg._id)}>
+                      Delete
+                    </Button>
+                  ) : null
                 ]}
                 author={<a>{msg.createUser && msg.createUser.username}</a>}
                 avatar={null}
@@ -247,4 +258,8 @@ class ItemInfo extends React.Component {
     )
   }
 }
-export default withRouter(ItemInfo)
+export default withRouter(
+  connect(state => ({
+    user: state.user
+  }))(ItemInfo)
+)

@@ -15,6 +15,7 @@ import {
 } from 'antd'
 import '../css/item.css'
 import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
 const { Search } = Input
 
 class Itemlist extends React.Component {
@@ -159,33 +160,38 @@ class Itemlist extends React.Component {
               </div>
               <div className="item-price">
                 <p>${item.price}</p>
-                <Dropdown
-                  overlay={
-                    <Menu>
-                      <Menu.Item
-                        onClick={() =>
-                          this.props.history.push(`/create/item?id=${item._id}`)
-                        }
-                      >
-                        Update
-                      </Menu.Item>
-                      <Menu.Item
-                        danger
-                        onClick={() => this.onItemUpdate(item._id)}
-                      >
-                        Cancellation
-                      </Menu.Item>
-                      <Menu.Item
-                        danger
-                        onClick={() => this.onItemDel(item._id)}
-                      >
-                        Delete
-                      </Menu.Item>
-                    </Menu>
-                  }
-                >
-                  <Button>Action</Button>
-                </Dropdown>
+                {this.props.user._id === item.createUser._id ||
+                this.props.user.role === 'admin' ? (
+                  <Dropdown
+                    overlay={
+                      <Menu>
+                        <Menu.Item
+                          onClick={() =>
+                            this.props.history.push(
+                              `/create/item?id=${item._id}`
+                            )
+                          }
+                        >
+                          Update
+                        </Menu.Item>
+                        <Menu.Item
+                          danger
+                          onClick={() => this.onItemUpdate(item._id)}
+                        >
+                          Cancellation
+                        </Menu.Item>
+                        <Menu.Item
+                          danger
+                          onClick={() => this.onItemDel(item._id)}
+                        >
+                          Delete
+                        </Menu.Item>
+                      </Menu>
+                    }
+                  >
+                    <Button>Action</Button>
+                  </Dropdown>
+                ) : null}
               </div>
             </div>
           )
@@ -194,4 +200,8 @@ class Itemlist extends React.Component {
     )
   }
 }
-export default withRouter(Itemlist)
+export default withRouter(
+  connect(state => ({
+    user: state.user
+  }))(Itemlist)
+)
