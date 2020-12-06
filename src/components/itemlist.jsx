@@ -97,7 +97,7 @@ class Itemlist extends React.Component {
           />
 
           <Search
-            placeholder="input search text"
+            placeholder="Search for you house"
             allowClear
             enterButton="Search"
             size="large"
@@ -108,7 +108,7 @@ class Itemlist extends React.Component {
             onChange={this.onGroupChange}
           >
             <div style={{ padding: '2% 0 2% 0' }}>
-              <Checkbox value={0}>Houses</Checkbox>
+            <span>Category:&nbsp;</span>  <Checkbox value={0}>Houses</Checkbox>
               <Checkbox value={1}>Apartment</Checkbox>
               <Checkbox value={2}>Flat</Checkbox>
             </div>
@@ -119,7 +119,7 @@ class Itemlist extends React.Component {
             onChange={this.onGroupTagChange}
           >
             <div style={{ padding: '2% 0 2% 0' }}>
-              <Checkbox value={'under offer'}>under offer</Checkbox>
+            <span>Features:&nbsp;</span>   <Checkbox value={'under offer'}>under offer</Checkbox>
               <Checkbox value={'high priority'}>high priority</Checkbox>
               <Checkbox value={'Garden'}>Garden</Checkbox>
               <Checkbox value={'Swimming pool'}>Swimming pool</Checkbox>

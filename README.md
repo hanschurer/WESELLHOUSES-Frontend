@@ -1,70 +1,49 @@
-# Getting Started with Create React App
+# WeSellHouses Frontend Code repo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### Current Status
 
-## Available Scripts
 
-In the project directory, you can run:
+## About
 
-### `npm start`
+This one sells house site spa made for WeSellHouses IT team.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Project Features
 
-### `npm test`
+• The general public can
+o view a list of all items (properties)
+o search/filter items based on their features and/or keywords o view any item detail
+o message item owners (estate agents) to express interest
+• New users (estate agents) can register on the app if they have a sign-up code o They need to supply a unique email and a password to sign up
+o For this prototype the sign-up code is always “we_sell_houses_agent”
+• Registered users can
+o log into the app
+o see their current list of properties
+o search/filter their current list of properties
+o add a new item (property) for sale
+o add or update the item category (commercial, terrace, apartment, ...) o add or update a description
+o add or update a list of features
+§ “has garden”,
+§ “needs refurbishment” § etc.
+o add or update an asking price, o add or update the location
+o attach or delete images
+o mark as “under offer”
+o archive/unpublish the item (property) from sale so it is no longer visible to the public
+o delete an item entirely
+o mark an item as ‘high priority’
+o view the current list of high priority items
+o view all messages sent from the general public
+o view, archive, or delete an individual message sent from the general
+public
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Tech
+Technology Stacks Used on the Front End: `react、react-router、redux、axios、fetch、antd、es6 、video-react`
+<br/>
 
-### `npm run build`
+## Project Deployment
+npm install 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+npm start
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+npm test
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
