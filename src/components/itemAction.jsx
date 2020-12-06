@@ -85,7 +85,8 @@ class ItemAction extends React.Component {
           ...values,
           imgUrl: fileList.map(item =>
             item.response.path.replace('http://localhost:3030', '')
-          )
+          ),
+          fileList: undefined
         }
       }).then(({ data }) => {
         this.props.history.push('/')
@@ -102,7 +103,8 @@ class ItemAction extends React.Component {
               'http://localhost:3030',
               ''
             )
-          )
+          ),
+          fileList: undefined
         }
       }).then(({ data }) => {
         this.props.history.push('/')
