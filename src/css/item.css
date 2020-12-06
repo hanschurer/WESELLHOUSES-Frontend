@@ -73,12 +73,18 @@
   width: 530px;
   min-width: 530px;
 }
+.banner .player,
 .banner img {
   width: 500px;
   height: 300px;
   display: block;
   object-fit: cover;
   margin: 0 auto;
+}
+.video-react .video-react-big-play-button {
+  left: 50%!important;
+  top: 50%!important;
+  transform: translate(-50%, -50%)!important;
 }
 .item-row-price {
   display: flex;

@@ -18,6 +18,8 @@ import { withRouter } from 'react-router-dom'
 import { getQueryString, types } from '../util'
 import moment from 'moment'
 import { connect } from 'react-redux'
+import { Player } from 'video-react'
+import 'video-react/dist/video-react.css'
 const { TextArea } = Input
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
   <>
@@ -147,7 +149,16 @@ class ItemInfo extends React.Component {
     const item = this.state.item
     return (
       <>
-        <Carousel style={{ marginTop: '40px' }} autoplay>
+        <Carousel style={{ marginTop: '40px' }}>
+          {item.videoUrl && (
+            <div className="banner">
+              <div className="player">
+                <Player>
+                  <source src={'http://localhost:3030' + item.videoUrl} />
+                </Player>
+              </div>
+            </div>
+          )}
           {item.imgUrl.map((url, index) => {
             return (
               <div className="banner" key={index}>

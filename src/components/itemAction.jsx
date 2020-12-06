@@ -8,11 +8,12 @@ import {
   Upload,
   message
 } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import '../css/itemAction.css'
 import axios from '../http'
 import { withRouter } from 'react-router-dom'
 import { getQueryString } from '../util'
+
 class ItemAction extends React.Component {
   formRef = React.createRef()
   constructor(props) {
@@ -23,7 +24,8 @@ class ItemAction extends React.Component {
         desc: '',
         type: [],
         tags: [],
-        fileList: []
+        fileList: [],
+        videoUrl: []
       }
     }
   }
@@ -32,6 +34,16 @@ class ItemAction extends React.Component {
       axios.get('/api/v1/item/' + getQueryString('id')).then(({ data }) => {
         this.formRef.current.setFieldsValue({
           ...data,
+          videoUrl: data.videoUrl
+            ? [
+                {
+                  status: 'done',
+                  uid: 1,
+                  url: data.videoUrl,
+                  name: data.videoUrl
+                }
+              ]
+            : [],
           fileList: data.imgUrl.map((url, index) => ({
             status: 'done',
             uid: index,
@@ -42,6 +54,16 @@ class ItemAction extends React.Component {
         this.setState({
           forms: {
             ...data,
+            videoUrl: data.videoUrl
+              ? [
+                  {
+                    status: 'done',
+                    uid: 1,
+                    url: data.videoUrl,
+                    name: data.videoUrl
+                  }
+                ]
+              : [],
             fileList: data.imgUrl.map((url, index) => ({
               status: 'done',
               uid: index,
@@ -59,6 +81,21 @@ class ItemAction extends React.Component {
       forms: { ...this.state.forms }
     })
   }
+  handleVideoChange = info => {
+    let fileList = []
+    if (info.fileList.length > 0) {
+      fileList = [info.fileList[0]]
+    }
+    fileList = fileList.map(file => {
+      if (file.response) {
+        file.url = file.response.path
+      }
+      return file
+    })
+    this.state.forms.videoUrl = fileList
+    console.log(fileList)
+    this.setState({ forms: { ...this.state.forms } })
+  }
   onGroupChange = values => {
     this.state.forms.type = values
     this.setState({
@@ -74,8 +111,12 @@ class ItemAction extends React.Component {
   onFinish = values => {
     console.log(values)
     let fileList = values.fileList
+    let videoUrl = values.videoUrl
     if (!(fileList instanceof Array)) {
       fileList = fileList.fileList
+    }
+    if (!(videoUrl instanceof Array)) {
+      videoUrl = videoUrl.fileList[0] ? videoUrl.fileList[0].url : ''
     }
     if (!getQueryString('id')) {
       axios({
@@ -86,6 +127,7 @@ class ItemAction extends React.Component {
           imgUrl: fileList.map(item =>
             item.response.path.replace('http://localhost:3030', '')
           ),
+          videoUrl,
           fileList: undefined
         }
       }).then(({ data }) => {
@@ -104,6 +146,7 @@ class ItemAction extends React.Component {
               ''
             )
           ),
+          videoUrl,
           fileList: undefined
         }
       }).then(({ data }) => {
@@ -159,7 +202,6 @@ class ItemAction extends React.Component {
               <Checkbox value={0}>Houses</Checkbox>
               <Checkbox value={1}>Apartment</Checkbox>
               <Checkbox value={2}>Flat</Checkbox>
-              
             </Checkbox.Group>
           </Form.Item>
           <Form.Item
@@ -233,8 +275,20 @@ class ItemAction extends React.Component {
               fileList={this.state.forms.fileList}
               onChange={this.handleChange}
               withCredentials={true}
+              accept="image/*"
             >
               {this.state.forms.fileList.length >= 8 ? null : uploadButton}
+            </Upload>
+          </Form.Item>
+          <Form.Item name="videoUrl" label="videoUrl">
+            <Upload
+              action="http://localhost:3030/api/v1/file"
+              fileList={this.state.forms.videoUrl}
+              onChange={this.handleVideoChange}
+              withCredentials={true}
+              accept=".mp4"
+            >
+              <Button icon={<UploadOutlined />}>Upload Video</Button>
             </Upload>
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
