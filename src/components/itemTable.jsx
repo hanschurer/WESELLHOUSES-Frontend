@@ -120,13 +120,14 @@ class itemTable extends React.Component {
         title: 'Action',
         key: 'action',
         align: 'center',
+        width: 220,
         render: (text, record) => (
           <div>
             <Button
               type="link"
               onClick={() => this.props.history.push(`/item?id=${record._id}`)}
             >
-              show info
+              Details
             </Button>
             <Button
               type="link"
@@ -134,16 +135,15 @@ class itemTable extends React.Component {
                 this.props.history.push(`/create/item?id=${record._id}`)
               }
             >
-              Update
+              Edit
             </Button>
             <Button
               type="link"
               onClick={() =>
                 this.onAchieve(record._id, record.status === 0 ? 1 : 0)
               }
-              style={{ marginRight: '10px' }}
             >
-              {record.status === 1 ? 'Achieve' : 'show'}
+              {record.status === 1 ? 'Achieve' : 'Show'}
             </Button>
             <Button type="link" onClick={() => this.onDel(record._id)}>
               Delete
