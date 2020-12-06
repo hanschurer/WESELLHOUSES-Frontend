@@ -14,16 +14,16 @@ export default class itemTable extends React.Component {
     this.searchMsgs()
   }
   searchMsgs = () => {
-    axios('/api/v1/msgs').then(({ data }) => {
+    axios('/api/v1/action/msgs').then(({ data }) => {
       this.setState({ msgs: data })
     })
   }
-  onAchieve = _id => {
+  onAchieve = (_id, status) => {
     axios({
       url: '/api/v1/msg/' + _id,
       method: 'put',
       data: {
-        status: 1
+        status
       }
     }).then(({ data }) => {
       message.success('Achieve succeeded')
@@ -41,6 +41,13 @@ export default class itemTable extends React.Component {
   }
   render() {
     const columns = [
+      {
+        title: 'status',
+        dataIndex: 'status',
+        align: 'center',
+        key: 'status',
+        render: text => <span>{text === 0 ? 'hide' : 'show'}</span>
+      },
       {
         title: 'content',
         dataIndex: 'content',
@@ -69,10 +76,12 @@ export default class itemTable extends React.Component {
           <div>
             <Button
               type="link"
-              onClick={() => this.onAchieve(record._id)}
+              onClick={() =>
+                this.onAchieve(record._id, record.status === 0 ? 1 : 0)
+              }
               style={{ marginRight: '10px' }}
             >
-              Achieve
+              {record.status === 1 ? 'Achieve' : 'show'}
             </Button>
             <Button type="link" onClick={() => this.onDel(record._id)}>
               Delete

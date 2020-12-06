@@ -45,12 +45,12 @@ class itemTable extends React.Component {
       this.setState({ items: data })
     })
   }
-  onAchieve = _id => {
+  onAchieve = (_id, status) => {
     axios({
       url: '/api/v1/item/status/' + _id,
       method: 'put',
       data: {
-        status: 1
+        status
       }
     }).then(({ data }) => {
       message.success('Achieve succeeded')
@@ -73,6 +73,13 @@ class itemTable extends React.Component {
         dataIndex: 'name',
         align: 'center',
         key: 'name'
+      },
+      {
+        title: 'status',
+        dataIndex: 'status',
+        align: 'center',
+        key: 'status',
+        render: text => <span>{text === 0 ? 'hide' : 'show'}</span>
       },
       {
         title: 'createdAt',
@@ -131,10 +138,12 @@ class itemTable extends React.Component {
             </Button>
             <Button
               type="link"
-              onClick={() => this.onAchieve(record._id)}
+              onClick={() =>
+                this.onAchieve(record._id, record.status === 0 ? 1 : 0)
+              }
               style={{ marginRight: '10px' }}
             >
-              Achieve
+              {record.status === 1 ? 'Achieve' : 'show'}
             </Button>
             <Button type="link" onClick={() => this.onDel(record._id)}>
               Delete

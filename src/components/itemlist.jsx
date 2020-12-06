@@ -160,7 +160,7 @@ class Itemlist extends React.Component {
               </div>
               <div className="item-price">
                 <p>${item.price}</p>
-                {this.props.user._id === item.createUser._id ||
+                {/* {this.props.user._id === item.createUser._id ||
                 this.props.user.role === 'admin' ? (
                   <Dropdown
                     overlay={
@@ -191,7 +191,7 @@ class Itemlist extends React.Component {
                   >
                     <Button>Action</Button>
                   </Dropdown>
-                ) : null}
+                ) : null} */}
               </div>
             </div>
           )

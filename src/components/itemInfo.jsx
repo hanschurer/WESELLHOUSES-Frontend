@@ -158,7 +158,7 @@ class ItemInfo extends React.Component {
         </Carousel>
         <div className="item item-row-price">
           <div>${item.price}</div>
-          {this.isAction(item.createUser._id) ? (
+          {/* {this.isAction(item.createUser._id) ? (
             <Dropdown
               overlay={
                 <Menu>
@@ -180,7 +180,7 @@ class ItemInfo extends React.Component {
             >
               <Button>Action</Button>
             </Dropdown>
-          ) : null}
+          ) : null} */}
         </div>
         <div className="item item-info">
           <div className="item-body">
