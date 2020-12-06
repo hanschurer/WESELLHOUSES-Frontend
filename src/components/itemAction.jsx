@@ -93,7 +93,6 @@ class ItemAction extends React.Component {
       return file
     })
     this.state.forms.videoUrl = fileList
-    console.log(fileList)
     this.setState({ forms: { ...this.state.forms } })
   }
   onGroupChange = values => {
@@ -111,12 +110,15 @@ class ItemAction extends React.Component {
   onFinish = values => {
     console.log(values)
     let fileList = values.fileList
-    let videoUrl = values.videoUrl
+    let videoUrl = values.videoUrl || ''
     if (!(fileList instanceof Array)) {
       fileList = fileList.fileList
     }
-    if (!(videoUrl instanceof Array)) {
+    if (!(videoUrl instanceof Array) && typeof videoUrl === 'object') {
       videoUrl = videoUrl.fileList[0] ? videoUrl.fileList[0].url : ''
+    }
+    if (videoUrl instanceof Array) {
+      videoUrl = ''
     }
     if (!getQueryString('id')) {
       axios({
