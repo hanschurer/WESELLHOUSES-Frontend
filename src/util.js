@@ -13,7 +13,4 @@ export const types = [
   'Houses', //0
   'Apartment', //1
   'Flat', //2
-  'Garden', //3
-  'Swimming pool', //4
-  'Garage' //5
 ]

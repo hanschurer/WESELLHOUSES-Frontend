@@ -68,19 +68,19 @@ class ItemInfo extends React.Component {
       method: 'delete'
     }).then(({ data }) => {
       message.success('Deletion succeeded')
-      this.onSearch('')
+      this.props.history.push('/')
     })
   }
   onItemUpdate = _id => {
     axios({
-      url: '/api/v1/item/' + _id,
+      url: '/api/v1/item/status/' + _id,
       method: 'put',
       data: {
         status: 1
       }
     }).then(({ data }) => {
-      message.success('Cancellation succeeded')
-      this.onSearch('')
+      message.success('Achieve succeeded')
+      this.props.history.push('/')
     })
   }
   handleChange = e => {
@@ -111,7 +111,7 @@ class ItemInfo extends React.Component {
       this.searchMsgs()
     })
   }
-  onCancellation = _id => {
+  onAchieve = _id => {
     axios({
       url: '/api/v1/msg/' + _id,
       method: 'put',
@@ -119,7 +119,7 @@ class ItemInfo extends React.Component {
         status: 1
       }
     }).then(({ data }) => {
-      message.success('Cancellation succeeded')
+      message.success('Achieve succeeded')
       this.searchMsgs()
     })
   }
@@ -140,10 +140,8 @@ class ItemInfo extends React.Component {
     })
     this.addMsg()
   }
-  isAction(createUserId) {
-    return (
-      this.props.user.role === 'admin' || this.props.user._id === createUserId
-    )
+  isAction(id) {
+    return this.props.user.role === 'admin' || id === this.props.user._id
   }
   render() {
     const item = this.state.item
@@ -172,7 +170,7 @@ class ItemInfo extends React.Component {
                     Update
                   </Menu.Item>
                   <Menu.Item danger onClick={() => this.onItemUpdate(item._id)}>
-                    Cancellation
+                    Achieve
                   </Menu.Item>
                   <Menu.Item danger onClick={() => this.onItemDel(item._id)}>
                     Delete
@@ -225,22 +223,22 @@ class ItemInfo extends React.Component {
               <Comment
                 key={msg._id}
                 actions={[
-                  this.isAction(msg.createUser._id) ? (
+                  this.isAction(item.createUser._id) ? (
                     <Button
                       type="link"
-                      onClick={() => this.onCancellation(msg._id)}
+                      onClick={() => this.onAchieve(msg._id)}
                       style={{ marginRight: '10px' }}
                     >
-                      Cancellation
+                      Achieve
                     </Button>
                   ) : null,
-                  this.isAction(msg.createUser._id) ? (
+                  this.isAction(item.createUser._id) ? (
                     <Button type="link" onClick={() => this.onDel(msg._id)}>
                       Delete
                     </Button>
                   ) : null
                 ]}
-                author={<a>{msg.createUser && msg.createUser.username}</a>}
+                author={<a>tourist</a>}
                 avatar={null}
                 content={<p>{msg.content}</p>}
                 datetime={

@@ -70,13 +70,13 @@ class Itemlist extends React.Component {
   }
   onItemUpdate = _id => {
     axios({
-      url: '/api/v1/item/' + _id,
+      url: '/api/v1/item/status/' + _id,
       method: 'put',
       data: {
         status: 1
       }
     }).then(({ data }) => {
-      message.success('Cancellation succeeded')
+      message.success('Achieve succeeded')
       this.onSearch('')
     })
   }
@@ -84,9 +84,12 @@ class Itemlist extends React.Component {
     return (
       <>
         <div style={{ padding: '2% 20%' }}>
-          <div className="add-btn" onClick={this.onAddClick}>
-            <PlusOutlined />
-          </div>
+          {this.props.user._id && (
+            <div className="add-btn" onClick={this.onAddClick}>
+              <PlusOutlined />
+            </div>
+          )}
+
           <PageHeader
             className="site-page-header"
             title="We Sell Houses"
@@ -108,9 +111,6 @@ class Itemlist extends React.Component {
               <Checkbox value={0}>Houses</Checkbox>
               <Checkbox value={1}>Apartment</Checkbox>
               <Checkbox value={2}>Flat</Checkbox>
-              <Checkbox value={3}>Garden</Checkbox>
-              <Checkbox value={4}>Swimming pool</Checkbox>
-              <Checkbox value={5}>Garage</Checkbox>
             </div>
           </Checkbox.Group>
           <Divider />
@@ -119,11 +119,11 @@ class Itemlist extends React.Component {
             onChange={this.onGroupTagChange}
           >
             <div style={{ padding: '2% 0 2% 0' }}>
-              <Checkbox value={'NICE'}>NICE</Checkbox>
-              <Checkbox value={'DEVELOPER'}>DEVELOPER</Checkbox>
-              <Checkbox value={'LOSER'}>LOSER</Checkbox>
-              <Checkbox value={'COOL'}>COOL</Checkbox>
-              <Checkbox value={'TEACHER'}>TEACHER</Checkbox>
+              <Checkbox value={'under offer'}>under offer</Checkbox>
+              <Checkbox value={'high priority'}>high priority</Checkbox>
+              <Checkbox value={'Garden'}>Garden</Checkbox>
+              <Checkbox value={'Swimming pool'}>Swimming pool</Checkbox>
+              <Checkbox value={'Garage'}>Garage</Checkbox>
             </div>
           </Checkbox.Group>
         </div>
@@ -178,7 +178,7 @@ class Itemlist extends React.Component {
                           danger
                           onClick={() => this.onItemUpdate(item._id)}
                         >
-                          Cancellation
+                          Achieve
                         </Menu.Item>
                         <Menu.Item
                           danger

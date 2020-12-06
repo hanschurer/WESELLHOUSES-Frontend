@@ -66,7 +66,7 @@ function Nav(props) {
         mode="horizontal"
         style={{ textAlign: 'right' }}
       >
-        <Menu.Item key="home" onClick={() => isLogin('/')}>
+        <Menu.Item key="home" onClick={() => isLogin('/', false)}>
           Home
         </Menu.Item>
         {LoginNav}

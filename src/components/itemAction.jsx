@@ -159,9 +159,7 @@ class ItemAction extends React.Component {
               <Checkbox value={0}>Houses</Checkbox>
               <Checkbox value={1}>Apartment</Checkbox>
               <Checkbox value={2}>Flat</Checkbox>
-              <Checkbox value={3}>Garden</Checkbox>
-              <Checkbox value={4}>Swimming pool</Checkbox>
-              <Checkbox value={5}>Garage</Checkbox>
+              
             </Checkbox.Group>
           </Form.Item>
           <Form.Item
@@ -186,11 +184,11 @@ class ItemAction extends React.Component {
               value={this.state.forms.tags}
               onChange={this.onGroupTagsChange}
             >
-              <Checkbox value={'NICE'}>NICE</Checkbox>
-              <Checkbox value={'DEVELOPER'}>DEVELOPER</Checkbox>
-              <Checkbox value={'LOSER'}>LOSER</Checkbox>
-              <Checkbox value={'COOL'}>COOL</Checkbox>
-              <Checkbox value={'TEACHER'}>TEACHER</Checkbox>
+              <Checkbox value={'under offer'}>under offer</Checkbox>
+              <Checkbox value={'high priority'}>high priority</Checkbox>
+              <Checkbox value={'Garden'}>Garden</Checkbox>
+              <Checkbox value={'Swimming pool'}>Swimming pool</Checkbox>
+              <Checkbox value={'Garage'}>Garage</Checkbox>
             </Checkbox.Group>
           </Form.Item>
           <Form.Item

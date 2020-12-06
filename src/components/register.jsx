@@ -85,13 +85,17 @@ class RegistrationForm extends React.Component {
   onFinish = values => {
     console.log('Received values of form: ', values)
     const { confirm, ...data } = values // ignore the 'confirm' value in data sent
+    if (data.code !== 'we_sell_houses_agent') {
+      return message.info('sign-up code incorrect!')
+    }
     axios({
       url: `/api/v1/users`,
       method: 'post',
       data: {
         ...data,
         avatarURL: values.imageUrl.file.response.path,
-        imageUrl: undefined
+        imageUrl: undefined,
+        code: undefined
       }
     }).then(({ data }) => {
       window.localStorage.setItem('user', JSON.stringify(data))
@@ -138,6 +142,9 @@ class RegistrationForm extends React.Component {
             )}
           </Upload>
         </Form.Item>
+        <Form.Item name="username" label="Username" rules={usernameRules}>
+          <Input />
+        </Form.Item>
         <Form.Item name="email" label="E-mail" rules={emailRules}>
           <Input />
         </Form.Item>
@@ -161,10 +168,19 @@ class RegistrationForm extends React.Component {
           <Input.Password />
         </Form.Item>
 
-        <Form.Item name="username" label="Username" rules={usernameRules}>
+        <Form.Item
+          name="code"
+          label="sign-up code"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your sign-up code!',
+              whitespace: true
+            }
+          ]}
+        >
           <Input />
         </Form.Item>
-
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
             Register

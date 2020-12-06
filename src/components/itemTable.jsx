@@ -1,73 +1,78 @@
 import React from 'react'
-import { Table, Tooltip, Avatar, Button, message } from 'antd'
+import { Table, Button, message, Input, Tag, Checkbox, Divider } from 'antd'
 import axios from '../http'
 import moment from 'moment'
-export default class itemTable extends React.Component {
+import { types } from '../util'
+import { withRouter } from 'react-router-dom'
+const { Search } = Input
+class itemTable extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      msgs: []
+      items: [],
+      values: [],
+      tags: []
     }
   }
-
-  componentDidMount() {
-    this.searchMsgs()
-  }
-  searchMsgs = () => {
-    axios('/api/v1/msgs').then(({ data }) => {
-      this.setState({ msgs: data })
+  onSearch = value => {
+    axios({
+      url: '/api/v1/action/items',
+      method: 'post',
+      data: {
+        type: this.state.values,
+        name: value,
+        tags: this.state.tags
+      }
+    }).then(({ data }) => {
+      this.setState({ items: data })
     })
   }
-  onCancellation = _id => {
+  onGroupChange = values => {
+    this.setState({
+      values
+    })
+  }
+  onGroupTagChange = tags => {
+    this.setState({
+      tags
+    })
+  }
+  componentDidMount() {
+    this.search()
+  }
+  search = () => {
+    axios.post('/api/v1/action/items').then(({ data }) => {
+      this.setState({ items: data })
+    })
+  }
+  onAchieve = _id => {
     axios({
-      url: '/api/v1/msg/' + _id,
+      url: '/api/v1/item/status/' + _id,
       method: 'put',
       data: {
         status: 1
       }
     }).then(({ data }) => {
-      message.success('Cancellation succeeded')
-      this.searchMsgs()
+      message.success('Achieve succeeded')
+      this.search()
     })
   }
   onDel = _id => {
     axios({
-      url: '/api/v1/msg/' + _id,
+      url: '/api/v1/item/' + _id,
       method: 'delete'
     }).then(({ data }) => {
       message.success('Deletion succeeded')
-      this.searchMsgs()
+      this.search()
     })
   }
   render() {
     const columns = [
       {
-        title: 'img',
-        key: 'img',
+        title: 'name',
+        dataIndex: 'name',
         align: 'center',
-        render: row => (
-          <Avatar
-            src={`http://localhost:3030${row.createUser &&
-              row.createUser.avatarURL}`}
-          />
-        )
-      },
-      {
-        title: 'username',
-        key: 'username',
-        align: 'center',
-        render: row => <span>{row.createUser && row.createUser.username}</span>
-      },
-      {
-        title: 'content',
-        dataIndex: 'content',
-        align: 'center',
-        key: 'content',
-        render: text => (
-          <Tooltip title={text}>
-            {text.length > 10 ? text.subtring(0, 10) + '...' : text}
-          </Tooltip>
-        )
+        key: 'name'
       },
       {
         title: 'createdAt',
@@ -79,6 +84,32 @@ export default class itemTable extends React.Component {
         )
       },
       {
+        title: 'attribute',
+        dataIndex: 'type',
+        key: 'type',
+        align: 'center',
+        render: text => (
+          <span>
+            {text.map((t, i) => (
+              <Tag key={i}>{types[t]}</Tag>
+            ))}
+          </span>
+        )
+      },
+      {
+        title: 'tags',
+        dataIndex: 'tags',
+        key: 'tags',
+        align: 'center',
+        render: tags => (
+          <span>
+            {tags.map((t, i) => (
+              <Tag key={i}>{t}</Tag>
+            ))}
+          </span>
+        )
+      },
+      {
         title: 'Action',
         key: 'action',
         align: 'center',
@@ -86,10 +117,24 @@ export default class itemTable extends React.Component {
           <div>
             <Button
               type="link"
-              onClick={() => this.onCancellation(record._id)}
+              onClick={() => this.props.history.push(`/item?id=${record._id}`)}
+            >
+              show info
+            </Button>
+            <Button
+              type="link"
+              onClick={() =>
+                this.props.history.push(`/create/item?id=${record._id}`)
+              }
+            >
+              Update
+            </Button>
+            <Button
+              type="link"
+              onClick={() => this.onAchieve(record._id)}
               style={{ marginRight: '10px' }}
             >
-              Cancellation
+              Achieve
             </Button>
             <Button type="link" onClick={() => this.onDel(record._id)}>
               Delete
@@ -98,6 +143,38 @@ export default class itemTable extends React.Component {
         )
       }
     ]
-    return <Table columns={columns} rowKey="_id" dataSource={this.state.msgs} />
+    return (
+      <div>
+        <Search
+          placeholder="input search text"
+          allowClear
+          enterButton="Search"
+          size="large"
+          onSearch={this.onSearch}
+        />
+        <Checkbox.Group value={this.state.values} onChange={this.onGroupChange}>
+          <div style={{ padding: '2% 0 2% 0' }}>
+            <Checkbox value={0}>Houses</Checkbox>
+            <Checkbox value={1}>Apartment</Checkbox>
+            <Checkbox value={2}>Flat</Checkbox>
+          </div>
+        </Checkbox.Group>
+        <Divider />
+        <Checkbox.Group
+          value={this.state.tags}
+          onChange={this.onGroupTagChange}
+        >
+          <div style={{ padding: '2% 0 2% 0' }}>
+            <Checkbox value={'under offer'}>under offer</Checkbox>
+            <Checkbox value={'high priority'}>high priority</Checkbox>
+            <Checkbox value={'Garden'}>Garden</Checkbox>
+            <Checkbox value={'Swimming pool'}>Swimming pool</Checkbox>
+            <Checkbox value={'Garage'}>Garage</Checkbox>
+          </div>
+        </Checkbox.Group>
+        <Table columns={columns} rowKey="_id" dataSource={this.state.items} />
+      </div>
+    )
   }
 }
+export default withRouter(itemTable)
