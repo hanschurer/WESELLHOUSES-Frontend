@@ -9,6 +9,8 @@
     "@testing-library/user-event": "^12.2.0",
     "antd": "^4.8.0",
     "axios": "^0.21.0",
+    "better-docs": "^2.3.2",
+    "jsdoc": "^3.6.6",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-redux": "^7.2.2",
@@ -24,6 +26,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "docs": "jsdoc -c jsdoc.conf.json",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

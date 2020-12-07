@@ -12,7 +12,12 @@ import {
   InputNumber,
 } from "antd";
 import { status, json } from "../utilities/requestHandlers";
-
+/**
+ * Component for every single porperty.
+ * fetch from mongodb and put in to the state
+ * @param props parent props 
+ * @component
+ */
 class Item extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +28,8 @@ class Item extends React.Component {
   }
 
   componentDidMount() {
-    const id = this.props.match.params.id; // available using withRouter()
+     /** available using withRouter()*/
+    const id = this.props.match.params.id; 
     fetch(`http://localhost:3030/api/v1/items/${id}`)
       .then(status)
       .then(json)
@@ -34,27 +40,27 @@ class Item extends React.Component {
         console.log(`Fetch error for post ${id}`);
       });
   }
-
+/** make modal visible*/
   showModal = () => {
     this.setState({ visible: true });
   };
 
   handleOk = () => {
-      
-
     this.setState({ visible: false });
   };
 
   handleCancel = () => {
     this.setState({ visible: false });
   };
+   /** make the modal visible by on click the button*/
   onclick = () => {
     this.showModal();
   };
 
   onFinish = (values) => {
     console.log('Received values of form: ', values);
-    const { confirm, ...data } = values;  // ignore the 'confirm' value in data sent
+    /** ignore the 'confirm' value in data sent*/
+    const { confirm, ...data } = values;  
     fetch('http://localhost:3030/api/v1/messages', {
         method: "POST",
         body: JSON.stringify(data),
@@ -65,12 +71,12 @@ class Item extends React.Component {
     .then(status)
     .then(json)
     .then(data => {
-        // TODO: display success message and/or redirect
+       
         console.log(data);
         alert("Message has been send")
     })
     .catch(err => {
-        // TODO: show nicely formatted error message and clear form
+       
         alert("Error adding user");
     });  
   };
@@ -86,7 +92,7 @@ class Item extends React.Component {
         wrapperCol: { xs: { span: 24, offset: 0 }, sm: { span: 16, offset: 6 } },
       };
       
-
+/** return a item page*/
     return (
       <>
         <Row>

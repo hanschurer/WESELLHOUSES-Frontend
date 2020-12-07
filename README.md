@@ -41,9 +41,13 @@ Technology Stacks Used on the Front End: `react、react-router、redux、axios�
 <br/>
 
 ## Project Deployment
-npm install 
+`npm install`  install the dependencies
 
-npm start
+`npm start` start the poject
 
-npm test
+`npm test` run test script
 
+`npm run docs` generate document 
+## Docs
+
+Documents are in the docs folder by using Jsdoc.

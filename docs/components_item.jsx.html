@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/item.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/item.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
+import { withRouter } from "react-router";
+import { Carousel } from "antd";
+import {
+  Row,
+  Col,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Layout,
+  InputNumber,
+} from "antd";
+import { status, json } from "../utilities/requestHandlers";
+/**
+ * Component for every single porperty.
+ * fetch from mongodb and put in to the state
+ * @param props parent props 
+ * @component
+ */
+class Item extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      item: [],
+      visible: false,
+    };
+  }
+
+  componentDidMount() {
+     /** available using withRouter()*/
+    const id = this.props.match.params.id; 
+    fetch(`http://localhost:3030/api/v1/items/${id}`)
+      .then(status)
+      .then(json)
+      .then((item) => {
+        this.setState({ item: item });
+      })
+      .catch((err) => {
+        console.log(`Fetch error for post ${id}`);
+      });
+  }
+/** make modal visible*/
+  showModal = () => {
+    this.setState({ visible: true });
+  };
+
+  handleOk = () => {
+    this.setState({ visible: false });
+  };
+
+  handleCancel = () => {
+    this.setState({ visible: false });
+  };
+   /** make the modal visible by on click the button*/
+  onclick = () => {
+    this.showModal();
+  };
+
+  onFinish = (values) => {
+    console.log('Received values of form: ', values);
+    /** ignore the 'confirm' value in data sent*/
+    const { confirm, ...data } = values;  
+    fetch('http://localhost:3030/api/v1/messages', {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json"
+        }        
+    })
+    .then(status)
+    .then(json)
+    .then(data => {
+       
+        console.log(data);
+        alert("Message has been send")
+    })
+    .catch(err => {
+       
+        alert("Error adding user");
+    });  
+  };
+
+  render() {
+    const item = this.state.item;
+    const contentStyle = {};
+    const formItemLayout = {
+        labelCol: { xs: { span: 24 }, sm: { span: 6 } },
+        wrapperCol: { xs: { span: 24 }, sm: { span: 12 } }
+      };
+      const tailFormItemLayout = {
+        wrapperCol: { xs: { span: 24, offset: 0 }, sm: { span: 16, offset: 6 } },
+      };
+      
+/** return a item page*/
+    return (
+      &lt;>
+        &lt;Row>
+          &lt;Col span={16}>
+            &lt;div>
+              &lt;h3 style={{ textAlign: "center" }}>
+                {" "}
+                &lt;img src={item.imageURL}>&lt;/img>{" "}
+              &lt;/h3>
+            &lt;/div>
+          &lt;/Col>
+          &lt;Col span={8}>  
+            {" "}
+            &lt;div>
+              &lt;h1>{item.title}&lt;/h1>
+              &lt;p>{item.location}&lt;/p>
+              &lt;p>Guide Price: {item.price}&lt;/p>
+              &lt;Button size={"large"} onClick={this.showModal}>
+                Contact Agent
+              &lt;/Button>
+            &lt;/div>
+          &lt;/Col>
+        &lt;/Row>
+        &lt;Row>
+          &lt;Col span={14}>
+            &lt;p style={({ textAlign: "center" }, { marginTop: "30px" })}>
+              {item.summary}
+            &lt;/p>
+          &lt;/Col>
+          &lt;Col span={10}>
+            &lt;p>Features: {item.features}&lt;/p>
+            &lt;p>Category: {item.category}&lt;/p>
+            &lt;p>Under offer: {item.underoffer}&lt;/p>
+            &lt;p>High Priority: {item.highp}&lt;/p>
+          &lt;/Col>
+        &lt;/Row>
+
+        &lt;Modal
+          title="Leave a Message"
+          visible={this.state.visible}
+          onOk={this.handleOk}
+          onCancel={this.handleCancel}
+        >
+        &lt;Form {...formItemLayout} name="message" onFinish={this.onFinish} scrollToFirstError >
+        &lt;Form.Item name="name" label="name" hasFeedback rules={[{required:true, message: 'Please input your password!'}] } >
+            &lt;Input  placeholder="Please input your name"/>
+        &lt;/Form.Item>
+        &lt;Form.Item name="email" label="E-mail" rules={[{type: 'email', message: 'The input is not valid E-mail!'},
+    {required: true, message: 'Please input your E-mail!' }]}>
+            &lt;Input placeholder="Please input your name" />
+        &lt;/Form.Item>
+        &lt;Form.Item name="tel" label="tel" rules={[{required:true}]} >
+            &lt;Input placeholder="Please input your telphone number"/>
+        &lt;/Form.Item>
+        &lt;Form.Item name="itemId" label="itemId" rules={[{required:true}]} >
+            &lt;Input placeholder="Input porperty ID that you want to enquiry"/>
+        &lt;/Form.Item>
+        &lt;Form.Item name="content" label="content" rules={[{required:true}]} >
+         &lt;Input.TextArea placeholder="Leave a meesage here.">&lt;/Input.TextArea>
+        &lt;/Form.Item>
+        &lt;Form.Item {...tailFormItemLayout}>
+            &lt;Button type="primary" htmlType="submit">
+                Send
+            &lt;/Button>
+        &lt;/Form.Item>
+      &lt;/Form>
+        &lt;/Modal>
+      &lt;/>
+    );
+  }
+}
+
+export default withRouter(Item);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Account.html">Account</a></li><li><a href="Home.html">Home</a></li><li><a href="Item.html">Item</a></li><li><a href="ItemAction.html">ItemAction</a></li><li><a href="itemTable.html">itemTable</a></li><li><a href="module.exports.html">exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#componentDidMount">componentDidMount</a></li><li><a href="global.html#getBase64">getBase64</a></li><li><a href="global.html#json">json</a></li><li><a href="global.html#Nav">Nav</a></li><li><a href="global.html#status">status</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Dec 07 2020 12:27:03 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

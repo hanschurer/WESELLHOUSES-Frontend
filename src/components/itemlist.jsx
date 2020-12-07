@@ -18,6 +18,10 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 const { Search } = Input
 
+/**
+ * Component for showing porperty list and also search fucntion.
+ *
+ */
 class Itemlist extends React.Component {
   constructor(props) {
     super(props)
@@ -27,12 +31,21 @@ class Itemlist extends React.Component {
       tags: []
     }
   }
-
+/**
+ * set data to the item
+ *
+ */
   componentDidMount() {
     axios.post('/api/v1/items').then(({ data }) => {
       this.setState({ items: data })
     })
   }
+  /**
+ * search fucniton
+ * @param value input value
+ * 
+ *
+ */
   onSearch = value => {
     axios({
       url: '/api/v1/items',
@@ -56,9 +69,17 @@ class Itemlist extends React.Component {
       tags
     })
   }
+  /**
+ * add a item
+ *
+ */
   onAddClick = () => {
     this.props.history.push('/create/item')
   }
+  /**
+ * delete a item by id
+ *@param int item id
+ */
   onItemDel = _id => {
     axios({
       url: '/api/v1/item/' + _id,
@@ -68,6 +89,10 @@ class Itemlist extends React.Component {
       this.onSearch('')
     })
   }
+  /**
+ * update a item by id
+ *@param int item id
+ */
   onItemUpdate = _id => {
     axios({
       url: '/api/v1/item/status/' + _id,

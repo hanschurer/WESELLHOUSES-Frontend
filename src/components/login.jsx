@@ -5,7 +5,9 @@ import { withRouter } from 'react-router-dom'
 import axios from '../http'
 import { connect } from 'react-redux'
 import { setUser } from '../store/actions'
-// add some layout to keep the form organised on different screen sizes
+
+/** add some layout to keep the form organised on different screen sizes*/
+
 const formItemLayout = {
   labelCol: { xs: { span: 24 }, sm: { span: 6 } },
   wrapperCol: { xs: { span: 24 }, sm: { span: 12 } }
@@ -13,8 +15,7 @@ const formItemLayout = {
 const tailFormItemLayout = {
   wrapperCol: { xs: { span: 24, offset: 0 }, sm: { span: 16, offset: 6 } }
 }
-
-// define validation rules for the form fields
+/** define validation rules for the form fields*/
 const passwordRules = [
   { required: true, message: 'Please input your password!' }
 ]
@@ -24,7 +25,10 @@ const usernameRules = [
 ]
 
 /**
- * Login form component for app signup.
+ * Component for login page.
+ *
+ * @component
+ * )
  */
 setUser({ a: 1 })
 class LoginForm extends React.Component {

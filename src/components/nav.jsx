@@ -3,6 +3,11 @@ import { Menu, Avatar, message } from 'antd'
 import { connect } from 'react-redux'
 import { setUser } from '../store/actions'
 import { useHistory } from 'react-router-dom'
+/**
+ * Component for nav page.
+ * inclued home regiseter login account and logout
+ * 
+ */
 function Nav(props) {
   let history = useHistory()
   let LoginNav

@@ -20,6 +20,13 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import { Player } from 'video-react'
 import 'video-react/dist/video-react.css'
+
+/**
+ * Component for itemInfo.
+ *
+ * @component
+ 
+ */
 const { TextArea } = Input
 const Editor = ({ onChange, onSubmit, submitting, value }) => (
   <>
@@ -64,6 +71,7 @@ class ItemInfo extends React.Component {
       this.searchMsgs()
     }
   }
+  /** delete a item by ID */
   onItemDel = _id => {
     axios({
       url: '/api/v1/item/' + _id,
@@ -73,6 +81,7 @@ class ItemInfo extends React.Component {
       this.props.history.push('/')
     })
   }
+  /** update a item by ID */
   onItemUpdate = _id => {
     axios({
       url: '/api/v1/item/status/' + _id,
@@ -90,6 +99,7 @@ class ItemInfo extends React.Component {
       value: e.target.value
     })
   }
+  /** search for messages */
   searchMsgs = () => {
     axios({
       url: '/api/v1/msgs/' + getQueryString('id')
@@ -97,6 +107,7 @@ class ItemInfo extends React.Component {
       this.setState({ msgs: data })
     })
   }
+  /** add a message */
   addMsg = () => {
     axios({
       url: '/api/v1/msg',
@@ -113,6 +124,7 @@ class ItemInfo extends React.Component {
       this.searchMsgs()
     })
   }
+  /** make the message invisible*/
   onAchieve = _id => {
     axios({
       url: '/api/v1/msg/' + _id,
@@ -125,6 +137,7 @@ class ItemInfo extends React.Component {
       this.searchMsgs()
     })
   }
+  /** delete a message by ID */
   onDel = _id => {
     axios({
       url: '/api/v1/msg/' + _id,
@@ -134,6 +147,7 @@ class ItemInfo extends React.Component {
       this.searchMsgs()
     })
   }
+  /** submit the message */
   handleSubmit = () => {
     if (this.state.submitting || !this.state.value) return
     this.state.submitting = true

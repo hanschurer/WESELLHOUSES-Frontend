@@ -5,7 +5,13 @@ import ItemTable from './itemTable'
 import MsgTable from './msgTable'
 import { LaptopOutlined } from '@ant-design/icons'
 const { Content, Sider } = Layout
-export default class Account extends React.Component {
+
+/**
+ * Component for user account inclede Messages and Itemtable.
+ * @component
+ * 
+ */
+ class Account extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -18,11 +24,21 @@ export default class Account extends React.Component {
   onChat = () => {
     console.log('1')
   }
+    /**
+     * Antd's Callback function-Components of the menu 
+     * @param {item} str the tiem that is onclik
+     * @param {key} key item key
+     * 
+     */
   onItemClick = ({ item, key, keyPath, domEvent }) => {
     this.setState({
       selectedKeys: [key]
     })
   }
+      /**
+     * include message page and itemtable page
+     * @returns <component>
+     */
   render() {
     return (
       <Layout>
@@ -66,3 +82,4 @@ export default class Account extends React.Component {
     )
   }
 }
+export default Account;

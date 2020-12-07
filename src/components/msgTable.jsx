@@ -2,6 +2,12 @@ import React from 'react'
 import { Table, Tooltip, Avatar, Button, message } from 'antd'
 import axios from '../http'
 import moment from 'moment'
+/**
+ * Component for message table.
+ *
+ * @component
+ 
+ */
 export default class itemTable extends React.Component {
   constructor(props) {
     super(props)
@@ -9,7 +15,10 @@ export default class itemTable extends React.Component {
       msgs: []
     }
   }
-
+/**
+ * call the searchmsgs fucntion to get the public message
+ *
+ */
   componentDidMount() {
     this.searchMsgs()
   }
@@ -18,6 +27,11 @@ export default class itemTable extends React.Component {
       this.setState({ msgs: data })
     })
   }
+  /**
+ * achieve one message
+ *@param int _id message id
+ *@param boolean visible of not
+ */
   onAchieve = (_id, status) => {
     axios({
       url: '/api/v1/msg/' + _id,
@@ -30,6 +44,10 @@ export default class itemTable extends React.Component {
       this.searchMsgs()
     })
   }
+  /**
+ * delete a message by ID
+ *
+ */
   onDel = _id => {
     axios({
       url: '/api/v1/msg/' + _id,
@@ -55,7 +73,7 @@ export default class itemTable extends React.Component {
         key: 'content',
         render: text => (
           <Tooltip title={text}>
-            {text.length > 10 ? text.subtring(0, 10) + '...' : text}
+            {text.length > 10 ? text.substring(0, 10) + '...' : text}
           </Tooltip>
         )
       },
